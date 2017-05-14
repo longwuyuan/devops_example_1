@@ -83,22 +83,22 @@ terraform apply
 ```
 devops_example_1% terraform show
 aws_db_instance.wordpressdbinstance:
-  id = terraform-00248c4da8bc32a537cdab1d50
-  address = terraform-00248c4da8bc32a537cdab1d50.cxuxwmlmbmuw.ap-northeast-1.rds.amazonaws.com
+  id = .......
+  address = .........ap-northeast-1.rds.amazonaws.com
   allocated_storage = 5
-  arn = arn:aws:rds:ap-northeast-1:733790669362:db:terraform-00248c4da8bc32a537cdab1d50
+  arn = arn:aws:rds:ap-northeast-1:......:db:......
   auto_minor_version_upgrade = true
   availability_zone = ap-northeast-1b
   backup_retention_period = 0
   backup_window = 19:47-20:17
   copy_tags_to_snapshot = false
   db_subnet_group_name = default
-  endpoint = terraform-00248c4da8bc32a537cdab1d50.cxuxwmlmbmuw.ap-northeast-1.rds.amazonaws.com:3306
+  endpoint = .........ap-northeast-1.rds.amazonaws.com:3306
   engine = mariadb
   engine_version = 10.1.19
   hosted_zone_id = Z24O6O9L7SGTNB
   iam_database_authentication_enabled = false
-  identifier = terraform-00248c4da8bc32a537cdab1d50
+  identifier = .......
   instance_class = db.t2.micro
   iops = 0
   kms_key_id =
@@ -106,10 +106,10 @@ aws_db_instance.wordpressdbinstance:
   maintenance_window = sat:14:29-sat:14:59
   monitoring_interval = 0
   multi_az = false
-  name = wordpressdb
+  name = ......
   option_group_name = default:mariadb-10-1
   parameter_group_name = default.mariadb10.1
-  password = WordPress123***
+  password = ......
   port = 3306
   publicly_accessible = false
   replicas.# = 0
@@ -121,11 +121,11 @@ aws_db_instance.wordpressdbinstance:
   storage_type = gp2
   tags.% = 0
   timezone =
-  username = wordpress
+  username = ....
   vpc_security_group_ids.# = 1
-  vpc_security_group_ids.3079241892 = sg-8d7c94eb
+  vpc_security_group_ids.3079241892 = sg-....
 aws_instance.wordpressphost:
-  id = i-0f9294b1cfbdf32fe
+  id = i-0f9....
   ami = ami-e499b383
   associate_public_ip_address = true
   availability_zone = ap-northeast-1b
@@ -138,15 +138,15 @@ aws_instance.wordpressphost:
   instance_type = t2.micro
   ipv6_address_count = 0
   ipv6_addresses.# = 0
-  key_name = myawstokyokeypair
+  key_name = ....keypair
   monitoring = false
   network_interface.# = 0
   network_interface_id = eni-28b04066
   primary_network_interface_id = eni-28b04066
-  private_dns = ip-172-31-20-140.ap-northeast-1.compute.internal
-  private_ip = 172.31.20.140
-  public_dns = ec2-52-69-114-217.ap-northeast-1.compute.amazonaws.com
-  public_ip = 52.69.114.217
+  private_dns = ip-1.....ap-northeast-1.compute.internal
+  private_ip = 172.31.....
+  public_dns = ......ap-northeast-1.compute.amazonaws.com
+  public_ip = 52......
   root_block_device.# = 1
   root_block_device.0.delete_on_termination = true
   root_block_device.0.iops = 0
@@ -154,12 +154,12 @@ aws_instance.wordpressphost:
   root_block_device.0.volume_type = standard
   security_groups.# = 0
   source_dest_check = true
-  subnet_id = subnet-a97444df
+  subnet_id = subnet-....
   tags.% = 0
   tenancy = default
   volume_tags.% = 0
   vpc_security_group_ids.# = 1
-  vpc_security_group_ids.3079241892 = sg-8d7c94eb
+  vpc_security_group_ids.3079241892 = sg-....
 
 devops_example_1%
 ```
