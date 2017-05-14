@@ -1,0 +1,32 @@
+{
+    "builders": [
+        {
+            "type": "docker",
+            "image": "",
+            "commit": true
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "ansible-local",
+            "playbook_dir": ".",
+            "playbook_file": "wordpress.yml"
+        }
+    ],
+    "post-processors": [
+        [
+            {
+                "type": "docker-tag",
+                "repository": "",
+                "tag": ""
+            },
+            {
+                "type": "docker-push",
+                "login": "true",
+                "login_username": "",
+                "login_password": "",
+                "login_email": ""
+            }
+        ]
+    ]
+}

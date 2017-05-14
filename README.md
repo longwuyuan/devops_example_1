@@ -34,6 +34,7 @@ Regarding the infrastructure itself and also external services like the monitori
 - Downloaded terraform from https://www.terraform.io/downloads.html
 - Unzip terraform executable in $HOME/bin
 - Created a directory in $HOME called problem1
+
 - Created a file with name _create_ec2_instance.tf_
 - Put the below content in _create_ec2_instance.tf_
 
@@ -61,11 +62,161 @@ resource "aws_db_instance" "wordpressdbinstance" {
 }
 ```
 
-- I use awscli. So I have ~/.aws/credentials on all my computers. Hence I don't need to put my aws access keys in this file as terraform will use ~/.aws/credentials automatically.
+- I use awscli. So I have ~/.aws/credentials on all my computers. Hence I don't need to put my aws access keys in the config file as terraform will use ~/.aws/credentials automatically.
+
 - I am using RancherOS AMI ami-e499b383. So I don't need to install any software or configure any services. Reasons are explained here http://rancher.com/rancher-os/.
 
 
+- Type the below command to verify what will happen if you apply the above config ;
 
+```
+teraform plan
+```
+
+- Execute the planned config as follows
+
+```
+terraform apply
+```
+- The result is seen below, which can be confirmed from the AWS-Console
+
+```
+devops_example_1% terraform show
+aws_db_instance.wordpressdbinstance:
+  id = terraform-00248c4da8bc32a537cdab1d50
+  address = terraform-00248c4da8bc32a537cdab1d50.cxuxwmlmbmuw.ap-northeast-1.rds.amazonaws.com
+  allocated_storage = 5
+  arn = arn:aws:rds:ap-northeast-1:733790669362:db:terraform-00248c4da8bc32a537cdab1d50
+  auto_minor_version_upgrade = true
+  availability_zone = ap-northeast-1b
+  backup_retention_period = 0
+  backup_window = 19:47-20:17
+  copy_tags_to_snapshot = false
+  db_subnet_group_name = default
+  endpoint = terraform-00248c4da8bc32a537cdab1d50.cxuxwmlmbmuw.ap-northeast-1.rds.amazonaws.com:3306
+  engine = mariadb
+  engine_version = 10.1.19
+  hosted_zone_id = Z24O6O9L7SGTNB
+  iam_database_authentication_enabled = false
+  identifier = terraform-00248c4da8bc32a537cdab1d50
+  instance_class = db.t2.micro
+  iops = 0
+  kms_key_id =
+  license_model = general-public-license
+  maintenance_window = sat:14:29-sat:14:59
+  monitoring_interval = 0
+  multi_az = false
+  name = wordpressdb
+  option_group_name = default:mariadb-10-1
+  parameter_group_name = default.mariadb10.1
+  password = WordPress123***
+  port = 3306
+  publicly_accessible = false
+  replicas.# = 0
+  replicate_source_db =
+  security_group_names.# = 0
+  skip_final_snapshot = false
+  status = available
+  storage_encrypted = false
+  storage_type = gp2
+  tags.% = 0
+  timezone =
+  username = wordpress
+  vpc_security_group_ids.# = 1
+  vpc_security_group_ids.3079241892 = sg-8d7c94eb
+aws_instance.wordpressphost:
+  id = i-0f9294b1cfbdf32fe
+  ami = ami-e499b383
+  associate_public_ip_address = true
+  availability_zone = ap-northeast-1b
+  disable_api_termination = false
+  ebs_block_device.# = 0
+  ebs_optimized = false
+  ephemeral_block_device.# = 0
+  iam_instance_profile =
+  instance_state = running
+  instance_type = t2.micro
+  ipv6_address_count = 0
+  ipv6_addresses.# = 0
+  key_name = myawstokyokeypair
+  monitoring = false
+  network_interface.# = 0
+  network_interface_id = eni-28b04066
+  primary_network_interface_id = eni-28b04066
+  private_dns = ip-172-31-20-140.ap-northeast-1.compute.internal
+  private_ip = 172.31.20.140
+  public_dns = ec2-52-69-114-217.ap-northeast-1.compute.amazonaws.com
+  public_ip = 52.69.114.217
+  root_block_device.# = 1
+  root_block_device.0.delete_on_termination = true
+  root_block_device.0.iops = 0
+  root_block_device.0.volume_size = 8
+  root_block_device.0.volume_type = standard
+  security_groups.# = 0
+  source_dest_check = true
+  subnet_id = subnet-a97444df
+  tags.% = 0
+  tenancy = default
+  volume_tags.% = 0
+  vpc_security_group_ids.# = 1
+  vpc_security_group_ids.3079241892 = sg-8d7c94eb
+
+devops_example_1%
+```
+
+- It is possible to completely delete and recreate the EC2 instance and the RDS database with a single command. To delete/destroy the ec2 and the rds ;
+
+```
+terraform destroy
+```
+To recreate the EC2 Instance & the RDS ;
+
+```
+terraform apply
+```
+
+## Create a custom wordpress docker image using packer & ansible
+
+- Download packer and unzip it in $HOME/bin
+- Install ansible from the linux package manager repository
+
+- Create a new file called _create_wordpress_docker_image.json_
+- Put the below content in the file _create_wordpress_docker_image.json_
+
+```
+{
+    "builders": [
+        {
+            "type": "docker",
+            "image": "",
+            "commit": true
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "ansible-local",
+            "playbook_dir": ".",
+            "playbook_file": "wordpress.yml"
+        }
+    ],
+    "post-processors": [
+        [
+            {
+                "type": "docker-tag",
+                "repository": "",
+                "tag": ""
+            },
+            {
+                "type": "docker-push",
+                "login": "true",
+                "login_username": "",
+                "login_password": "",
+                "login_email": ""
+            }
+        ]
+    ]
+}
+```
 
 
 # PREFERRED SOLUTIONS
