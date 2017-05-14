@@ -46,7 +46,7 @@ provider "aws" {
 resource "aws_instance" "wordpressphost" {
     ami           = "ami-e499b383"
     instance_type = "t2.micro"
-    key_name = "myawstokyokeypair"
+    key_name = "...."
 }
 
 resource "aws_db_instance" "wordpressdbinstance" {
@@ -56,8 +56,8 @@ resource "aws_db_instance" "wordpressdbinstance" {
   engine_version       = "10.1.19"
   instance_class       = "db.t2.micro"
   name                 = "wordpressdb"
-  username             = "wordpress"
-  password             = "WordPress123***"
+  username             = "...."
+  password             = "....."
   parameter_group_name = "default.mariadb10.1"
 }
 ```
