@@ -27,7 +27,7 @@ Regarding the infrastructure itself and also external services like the monitori
 
 # SOLUTION
 
-## Create a EC2 Instance using terraform
+## Create a EC2 & RDS Instance using terraform
 
 - I did this on Linux
 - Make sure $PATH included $HOME/bin
@@ -45,7 +45,19 @@ provider "aws" {
 resource "aws_instance" "wordpressphost" {
     ami           = "ami-e499b383"
     instance_type = "t2.micro"
-    key_name      = "mykeypair"
+    key_name = "myawstokyokeypair"
+}
+
+resource "aws_db_instance" "wordpressdbinstance" {
+  allocated_storage    = 5
+  storage_type         = "gp2"
+  engine               = "mariadb"
+  engine_version       = "10.1.19"
+  instance_class       = "db.t2.micro"
+  name                 = "wordpressdb"
+  username             = "wordpress"
+  password             = "WordPress123***"
+  parameter_group_name = "default.mariadb10.1"
 }
 ```
 
@@ -56,9 +68,40 @@ resource "aws_instance" "wordpressphost" {
 
 
 
-# PREFERRED SOLUTION
+# PREFERRED SOLUTIONS
 
-- If this was a real production wordpress, then it is better to use Terraform
+To describe a preferred solution, let us clearly define some imaginary specs ;
+
+* Wordpress application has to be a docker container
+* Commercial end-users of wordpress
+* Least amount of complication required
+* SSL required
+* Caching required
+* CI+CD required
+* HA required
+* Auto-scaling required
+* Static content should be on S3 for persistent storage
+
+# Preferred Solution # 1
+
+For all the above needs, AWS documentation itself refers to the wordpress container on hub.docker.com as seen here   http://docs.aws.amazon.com/AmazonECS/latest/developerguide/example_task_definitions.html#example_task_definition-wordpress
+
+- If this was a real production wordpress, then it is better to use Terraform for creating AWS-ECS (container service) config in terraform https://www.terraform.io/docs/providers/aws/r/ecs_service.html
+
+- The official hub.docker.com Wordpress container can take environment variables as parameters to connect to the RDS. Examples of the environment variables for the official wordpress container are ;
+
+```
+-e WORDPRESS_DB_HOST=... (defaults to the IP and port of the linked mysql container)
+-e WORDPRESS_DB_USER=... (defaults to "root")
+-e WORDPRESS_DB_PASSWORD=... (defaults to the value of the MYSQL_ROOT_PASSWORD environment variable from the linked mysql container)
+-e WORDPRESS_DB_NAME=... (defaults to "wordpress")
+-e WORDPRESS_TABLE_PREFIX=... (defaults to "", only set this when you need to override the default table prefix in wp-config.php)
+-e WORDPRESS_AUTH_KEY=..., -e WORDPRESS_SECURE_AUTH_KEY=..., -e WORDPRESS_LOGGED_IN_KEY=..., -e WORDPRESS_NONCE_KEY=..., -e WORDPRESS_AUTH_SALT=..., -e WORDPRESS_SECURE_AUTH_SALT=..., -e WORDPRESS_LOGGED_IN_SALT=..., -e WORDPRESS_NONCE_SALT=... (default to unique random SHA1s)
+```
+
+
+# Preferred Solution # 2
+
 - Create a VPC with Public & Private subnet in terraform
 - Create subnets in 2 availability Zones for HA in terraform
 - Create 1 Server in each Public subnet with RacherOS as the AMI in terraform
