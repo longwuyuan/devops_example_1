@@ -39,12 +39,13 @@ Regarding the infrastructure itself and also external services like the monitori
 
 ```
 provider "aws" {
-  region     = "ap-northeast-1"
+    region     = "ap-northeast-1"
 }
 
-resource "aws_instance" "example" {
-  ami           = "ami-e499b383"
-  instance_type = "t2.micro"
+resource "aws_instance" "wordpressphost" {
+    ami           = "ami-e499b383"
+    instance_type = "t2.micro"
+    key_name      = "mykeypair"
 }
 ```
 
@@ -57,6 +58,7 @@ resource "aws_instance" "example" {
 
 # PREFERRED SOLUTION
 
+- If this was a real production wordpress, then it is better to use Terraform
 - Create a VPC with Public & Private subnet in terraform
 - Create subnets in 2 availability Zones for HA in terraform
 - Create 1 Server in each Public subnet with RacherOS as the AMI in terraform
@@ -69,6 +71,9 @@ resource "aws_instance" "example" {
 - Launch HAProxy Containers inside Rancher on the pubhost
 - Launch varnish cache container on privhost if not using AWS-CDN
 - Link varnish cache container to wordpress backend if not using AWS-CDN
-- Configure Wordpress static content to be served  from S3
-- use the Catalog inside rancher to launch the Wordpress instance
+- Configure Wordpress static content & uploads directory to be served from S3
+- Use the Catalog inside rancher to launch the Wordpress instance
+- Use terraform to make & desroy Route53 DNS entry for the wordpress site's FQDN
+- Pull the Official hub.docker.com Wordpress image instead of using packer to build the wordpress image
+- Pass the environment variables to the official Wordpress image on ub.docker.com for connection to RDS
 -
